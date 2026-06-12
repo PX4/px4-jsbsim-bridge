@@ -225,7 +225,7 @@ void MavlinkInterface::Load() {
   }
 }
 
-void MavlinkInterface::SendSensorMessages(int time_usec) {
+void MavlinkInterface::SendSensorMessages(uint64_t time_usec) {
   mavlink_hil_sensor_t sensor_msg {};
 
   sensor_msg.time_usec = time_usec;
@@ -280,7 +280,7 @@ void MavlinkInterface::SendSensorMessages(int time_usec) {
 
 void MavlinkInterface::SendGpsMessages(const SensorData::Gps &data) {
   // fill HIL GPS Mavlink msg
-  mavlink_hil_gps_t hil_gps_msg;
+  mavlink_hil_gps_t hil_gps_msg{};
   hil_gps_msg.time_usec = data.time_utc_usec;
   hil_gps_msg.fix_type = data.fix_type;
   hil_gps_msg.lat = data.latitude_deg;

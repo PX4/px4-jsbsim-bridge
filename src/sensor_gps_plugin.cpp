@@ -42,6 +42,23 @@
 #include "sensor_gps_plugin.h"
 #include "common.h"
 
+#include <cmath>
+#include <cstdint>
+#include <limits>
+
+namespace {
+uint64_t SimTimeMicros(double sim_time_s) {
+  if (!std::isfinite(sim_time_s) || sim_time_s <= 0.0) {
+    return 0;
+  }
+  const double micros = sim_time_s * 1.0e6;
+  if (!std::isfinite(micros) || micros >= static_cast<double>(std::numeric_limits<uint64_t>::max())) {
+    return std::numeric_limits<uint64_t>::max();
+  }
+  return static_cast<uint64_t>(micros);
+}
+}  // namespace
+
 SensorGpsPlugin::SensorGpsPlugin(JSBSim::FGFDMExec* jsbsim) : SensorPlugin(jsbsim) { _update_rate = 1.0; }
 
 SensorGpsPlugin::~SensorGpsPlugin() {}
@@ -74,7 +91,7 @@ SensorData::Gps SensorGpsPlugin::getData() {
 
 SensorData::Gps SensorGpsPlugin::getGpsFromJSBSim() {
   SensorData::Gps ret;
-  ret.time_utc_usec = _sim_ptr->GetSimTime() * 1e6;
+  ret.time_utc_usec = SimTimeMicros(_sim_ptr->GetSimTime());
 
   if (_jsb_gps_fix_type == "none") {
     ret.fix_type = 3;

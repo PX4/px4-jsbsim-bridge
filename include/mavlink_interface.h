@@ -29,6 +29,7 @@
 #include <cassert>
 #include <chrono>
 #include <condition_variable>
+#include <cstdint>
 #include <deque>
 #include <memory>
 #include <mutex>
@@ -103,7 +104,7 @@ struct Airspeed {
 };
 
 struct Gps {
-  int time_utc_usec;
+  uint64_t time_utc_usec;
   int fix_type;
   double latitude_deg;
   double longitude_deg;
@@ -132,7 +133,7 @@ class MavlinkInterface {
   void open();
   void close();
   void Load();
-  void SendSensorMessages(int time_usec);
+  void SendSensorMessages(uint64_t time_usec);
   void SendGpsMessages(const SensorData::Gps &data);
   void UpdateBarometer(const SensorData::Barometer &data);
   void UpdateAirspeed(const SensorData::Airspeed &data);

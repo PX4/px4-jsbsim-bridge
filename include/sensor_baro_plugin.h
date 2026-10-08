@@ -64,7 +64,9 @@ class SensorBaroPlugin : public SensorPlugin {
 
   // state variables for baro pressure sensor random noise generator
   double _baro_rnd_y2{0.};
-  double _baro_mbar_rms_noise{1.};
+  // 0.01 mbar = 1 Pa RMS, same as PX4 SensorBaroSim and the Gazebo barometer plugin
+  // (the previous default of 1 mbar = 100 Pa, ~8 m of altitude, made EKF2 report "height estimate not stable")
+  double _baro_mbar_rms_noise{0.01};
   bool _baro_rnd_use_last{false};
   double _baro_drift_mbar{0.};
   double _baro_drift_mbar_per_sec{0.};
